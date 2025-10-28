@@ -1,28 +1,37 @@
-import { useState } from 'react'
+import React, { useState } from 'react';
+import Navbar from './components/Navbar';
+import LoginPage from './components/LoginPage';
+import RaiseTicket from './components/RaiseTicket';
+import SupportDashboard from './components/SupportDashboard';
 
-function App() {
-  const [count, setCount] = useState(0)
+const gradient = 'from-[#7b42f6] to-[#d634f5]';
+
+export default function App() {
+  const [view, setView] = useState('login');
+  const context = view === 'dashboard'
+    ? { label: 'IT Support Team – IT Support', sub: 'IT Support Dashboard' }
+    : view === 'tickets'
+    ? { label: 'John Doe – Employee', sub: 'Raise a New Ticket' }
+    : { label: 'Guest', sub: 'Sign in to continue' };
+
+  const handleNavigate = (route) => {
+    if (route === 'dashboard') setView('dashboard');
+    if (route === 'tickets') setView('tickets');
+    if (route === 'reviews') setView('login');
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#f8f9fc] text-gray-900">
+      <Navbar onNavigate={handleNavigate} context={context} />
+      {view === 'login' && (
+        <LoginPage onSignIn={() => setView('tickets')} />
+      )}
+      {view === 'tickets' && (
+        <RaiseTicket />
+      )}
+      {view === 'dashboard' && (
+        <SupportDashboard />
+      )}
     </div>
-  )
+  );
 }
-
-export default App
